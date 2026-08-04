@@ -27,6 +27,9 @@ func main() {
 
 		if command == "exit" {
 			break
+		} else if command == "echo" {
+			echocommand, _ := reader.ReadString('\n')
+			fmt.Println(echocommand)
 		}
 
 		fmt.Printf("%s: command not found\n", command)
