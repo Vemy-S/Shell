@@ -25,12 +25,13 @@ func main() {
 			os.Exit(0)
 		}
 
-		//strings.hasPrefix(command, "echo") found
-		//strings.TrimPrefix(command, "echo") after
-
+		// strings.hasPrefix(command, "echo") found
+		// strings.TrimPrefix(command, "echo") after
+		// after, found := strings.CutPrefix(command, "echo")
+		// if found {}
 		if command == "exit" {
 			break
-		} else if after, found := strings.CutPrefix(command, "echo"); found {
+		} else if after, found := strings.CutPrefix(command, "echo "); found {
 			fmt.Println(after)
 			continue
 		}
