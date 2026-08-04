@@ -22,14 +22,17 @@ func main() {
 
 		if err != nil {
 			print("Err: ", err)
-			os.Exit(1)
+			os.Exit(0)
 		}
+
+		//strings.hasPrefix(command, "echo") found
+		//strings.TrimPrefix(command, "echo") after
 
 		if command == "exit" {
 			break
-		} else if command == "echo" {
-			echocommand, _ := reader.ReadString('\n')
-			fmt.Println(echocommand)
+		} else if after, found := strings.CutPrefix(command, "echo"); found {
+			fmt.Println(after)
+			continue
 		}
 
 		fmt.Printf("%s: command not found\n", command)
