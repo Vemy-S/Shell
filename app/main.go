@@ -20,6 +20,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(strings.TrimSpace(command), "Command not found:")
+	fmt.Println(strings.TrimSpace(command), ": command not found")
 
 }
