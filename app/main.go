@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -83,6 +84,7 @@ func main() {
 
 				if foundPath != "" {
 					fmt.Printf("%s is %s\n", target, foundPath)
+					executePath(foundPath, target)
 				} else {
 					fmt.Printf("%s: not found\n", target)
 				}
@@ -92,4 +94,10 @@ func main() {
 		}
 		fmt.Printf("%s: command not found\n", command)
 	}
+}
+
+func executePath(pathExecute string, arg string) {
+	cmd := exec.Command(pathExecute, arg)
+	err := cmd.Run()
+	fmt.Println("No se pudo ejecutar el path", err)
 }
