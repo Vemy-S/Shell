@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -49,17 +50,54 @@ func main() {
 
 		if target, found := strings.CutPrefix(command, "type "); found {
 
+			// x - execute permissions
+			// r - read permissions
+			// w - write permissions
 			if targets[target] {
 				fmt.Printf("%s is a shell builtin \n", target)
 				continue
-			} else {
-				fmt.Printf("%s: not found \n", target)
+			}
+
+			if !targets[target] {
+
+				paths := filepath.SplitList(os.Getenv("PATH"))
+				var foundpath string
+
+				for _, path := range paths {
+
+					fullpath := filepath.Join(path, target)
+					info, err := os.Stat(fullpath)
+
+					var isExecutable bool
+
+					if err != nil {
+						continue
+					}
+
+					if info.Mode()&0111 != 0 {
+						isExecutable = true
+					}
+
+					if isExecutable && !info.IsDir() {
+						foundpath = fullpath
+						break
+					}
+
+					if !isExecutable && !info.IsDir() {
+						continue
+					}
+				}
+
+				if foundpath != "" {
+					fmt.Println(foundpath)
+				} else {
+					fmt.Printf("%s: not found\n", target)
+				}
+
 				continue
 			}
 
 		}
-
 		fmt.Printf("%s: command not found\n", command)
-
 	}
 }
