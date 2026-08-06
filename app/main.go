@@ -61,39 +61,30 @@ func main() {
 			if !targets[target] {
 
 				paths := filepath.SplitList(os.Getenv("PATH"))
-				var foundpath string
+				var foundPath string
 
 				for _, path := range paths {
 
 					fullpath := filepath.Join(path, target)
 					info, err := os.Stat(fullpath)
-
-					var isExecutable bool
+					isExecutable := info.Mode().Perm()&0111 != 0
 
 					if err != nil {
 						continue
 					}
 
-					if info.Mode()&0111 != 0 {
-						isExecutable = true
-					}
-
 					if isExecutable && !info.IsDir() {
-						foundpath = fullpath
+						foundPath = fullpath
 						break
 					}
 
-					if !isExecutable && !info.IsDir() {
-						continue
-					}
 				}
 
-				if foundpath != "" {
-					fmt.Println(foundpath)
+				if foundPath != "" {
+					fmt.Printf("%s is %s\n", target, foundPath)
 				} else {
 					fmt.Printf("%s: not found\n", target)
 				}
-
 				continue
 			}
 
