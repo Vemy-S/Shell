@@ -10,6 +10,12 @@ import (
 // Ensures gofmt doesn't remove the "fmt" import in stage 1 (feel free to remove this!)
 var _ = fmt.Print
 
+var targets = map[string]bool{
+	"type": true,
+	"exit": true,
+	"echo": true,
+}
+
 func main() {
 	for {
 		fmt.Print("$ ")
@@ -31,9 +37,26 @@ func main() {
 		// if found {}
 		if command == "exit" {
 			break
-		} else if after, found := strings.CutPrefix(command, "echo "); found {
+		}
+
+		if after, found := strings.CutPrefix(command, "echo "); found {
 			fmt.Println(after)
 			continue
+		}
+
+		// strings.hasPrefix(command, "type") - found
+		// strings.TrimPrefix(command, "type") - target
+
+		if target, found := strings.CutPrefix(command, "type "); found {
+
+			if targets[target] {
+				fmt.Printf("%s is a shell builtin \n", target)
+				continue
+			} else {
+				fmt.Printf("%s: not found \n", command)
+				continue
+			}
+
 		}
 
 		fmt.Printf("%s: command not found\n", command)
