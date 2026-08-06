@@ -67,11 +67,12 @@ func main() {
 
 					fullpath := filepath.Join(path, target)
 					info, err := os.Stat(fullpath)
-					isExecutable := info.Mode().Perm()&0111 != 0
 
 					if err != nil {
 						continue
 					}
+
+					isExecutable := info.Mode().Perm()&0110 != 0
 
 					if isExecutable && !info.IsDir() {
 						foundPath = fullpath
