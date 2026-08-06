@@ -50,10 +50,10 @@ func main() {
 		if target, found := strings.CutPrefix(command, "type "); found {
 
 			if targets[target] {
-				fmt.Printf("%s is a shell builtin \n", target[:5])
+				fmt.Printf("%s is a shell builtin \n", target)
 				continue
 			} else {
-				fmt.Printf("%s: not found \n", command[:5])
+				fmt.Printf("%s: not found \n", target)
 				continue
 			}
 
