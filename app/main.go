@@ -67,12 +67,7 @@ func main() {
 
 		parts := strings.Fields(command)
 
-		programFound := findExecutable(parts[0])
-
-		if programFound != "" {
-			executeProgram(programFound, parts[1:])
-			continue
-		}
+		executeProgram(parts[0], parts[1:])
 
 		fmt.Printf("%s: command not found\n", command)
 	}
@@ -107,9 +102,9 @@ func findExecutable(target string) string {
 	return foundPath
 }
 
-func executeProgram(programPath string, args []string) {
+func executeProgram(command string, args []string) {
 
-	cmd := exec.Command(programPath, args...)
+	cmd := exec.Command(command, args...)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -118,7 +113,7 @@ func executeProgram(programPath string, args []string) {
 	err := cmd.Run()
 
 	if err != nil {
-		fmt.Printf("Err: %s \n Path: %s \n", err, programPath)
+		fmt.Printf("Err: %s \n Path: %s \n", err, command)
 	}
 
 }
