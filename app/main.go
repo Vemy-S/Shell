@@ -69,7 +69,10 @@ func main() {
 
 		programFound := findExecutable(parts[0])
 
-		executeProgram(programFound, parts[1:])
+		if programFound != "" {
+			executeProgram(programFound, parts[1:])
+			continue
+		}
 
 		fmt.Printf("%s: command not found\n", command)
 	}
@@ -107,6 +110,11 @@ func findExecutable(target string) string {
 func executeProgram(programPath string, args []string) {
 
 	cmd := exec.Command(programPath, args...)
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+
 	err := cmd.Run()
 
 	if err != nil {
