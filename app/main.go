@@ -33,11 +33,6 @@ func main() {
 			os.Exit(0)
 		}
 
-		parts := strings.Fields(command)
-
-		programFound := findExecutable(parts[0])
-		executeProgram(programFound, parts[1:])
-
 		// strings.hasPrefix(command, "echo") found
 		// strings.TrimPrefix(command, "echo") after
 		// after, found := strings.CutPrefix(command, "echo")
@@ -69,6 +64,13 @@ func main() {
 			}
 
 		}
+
+		parts := strings.Fields(command)
+
+		programFound := findExecutable(parts[0])
+
+		executeProgram(programFound, parts[1:])
+
 		fmt.Printf("%s: command not found\n", command)
 	}
 }
