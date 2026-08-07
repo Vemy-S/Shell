@@ -105,7 +105,7 @@ func findExecutable(target string) string {
 }
 
 func executeProgram(programPath string, args []string) {
-	fmt.Printf("args: %s", args)
+
 	cmd := exec.Command(programPath, args...)
 	err := cmd.Run()
 
