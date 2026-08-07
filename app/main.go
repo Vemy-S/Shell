@@ -101,12 +101,6 @@ func findExecutable(target string) string {
 
 	}
 
-	if foundPath != "" {
-		fmt.Printf("%s is %s\n", target, foundPath)
-	} else {
-		fmt.Printf("%s: not found\n", target)
-	}
-
 	return foundPath
 }
 
