@@ -58,8 +58,13 @@ func main() {
 
 			if !targets[target] {
 
-				findExecutable(target)
+				foundPath := findExecutable(target)
 
+				if foundPath != "" {
+					fmt.Printf("%s is %s\n", target, foundPath)
+				} else {
+					fmt.Printf("%s: not found\n", target)
+				}
 				continue
 			}
 
