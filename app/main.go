@@ -67,7 +67,12 @@ func main() {
 
 		parts := strings.Fields(command)
 
-		executeProgram(parts[0], parts[1:])
+		programFound := findExecutable(parts[0])
+
+		if programFound != "" {
+			executeProgram(parts[0], parts[1:])
+			continue
+		}
 
 		fmt.Printf("%s: command not found\n", command)
 	}
