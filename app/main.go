@@ -33,6 +33,11 @@ func main() {
 			os.Exit(0)
 		}
 
+		parts := strings.Fields(command)
+
+		programFound := findExecutable(parts[0])
+		executeProgram(programFound, parts[1:])
+
 		// strings.hasPrefix(command, "echo") found
 		// strings.TrimPrefix(command, "echo") after
 		// after, found := strings.CutPrefix(command, "echo")
@@ -51,9 +56,6 @@ func main() {
 
 		if target, found := strings.CutPrefix(command, "type "); found {
 
-			// x - execute permissions
-			// r - read permissions
-			// w - write permissions
 			if targets[target] {
 				fmt.Printf("%s is a shell builtin \n", target)
 				continue
@@ -61,33 +63,8 @@ func main() {
 
 			if !targets[target] {
 
-				paths := filepath.SplitList(os.Getenv("PATH"))
-				var foundPath string
+				findExecutable(target)
 
-				for _, path := range paths {
-
-					fullpath := filepath.Join(path, target)
-					info, err := os.Stat(fullpath)
-
-					if err != nil {
-						continue
-					}
-
-					isExecutable := info.Mode().Perm()&0110 != 0
-
-					if isExecutable && !info.IsDir() {
-						foundPath = fullpath
-						break
-					}
-
-				}
-
-				if foundPath != "" {
-					fmt.Printf("%s is %s\n", target, foundPath)
-					executePath(foundPath, target)
-				} else {
-					fmt.Printf("%s: not found\n", target)
-				}
 				continue
 			}
 
@@ -96,8 +73,48 @@ func main() {
 	}
 }
 
-func executePath(pathExecute string, arg string) {
-	cmd := exec.Command(pathExecute, arg)
+func findExecutable(target string) string {
+
+	path := os.Getenv("PATH")
+
+	var foundPath string
+
+	paths := filepath.SplitList(path)
+
+	for _, path := range paths {
+
+		fullpath := filepath.Join(path, target)
+		info, err := os.Stat(fullpath)
+
+		if err != nil {
+			continue
+		}
+
+		isExecutable := info.Mode().Perm()&0110 != 0
+
+		if isExecutable && !info.IsDir() {
+			foundPath = fullpath
+			break
+		}
+
+	}
+
+	if foundPath != "" {
+		fmt.Printf("%s is %s\n", target, foundPath)
+	} else {
+		fmt.Printf("%s: not found\n", target)
+	}
+
+	return foundPath
+}
+
+func executeProgram(programPath string, args []string) {
+	fmt.Printf("args: %s", args)
+	cmd := exec.Command(programPath, args...)
 	err := cmd.Run()
-	fmt.Println("No se pudo ejecutar el path", err)
+
+	if err != nil {
+		fmt.Printf("Err: %s \n Path: %s \n", err, programPath)
+	}
+
 }
