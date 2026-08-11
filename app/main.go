@@ -33,23 +33,44 @@ func main() {
 			os.Exit(0)
 		}
 
+		if command == " " {
+			continue
+		}
+
+		args := parserQuoting(command)
+		if len(args) == 0 {
+			continue
+		}
+
+		cmd := args[0]
+
 		// strings.hasPrefix(command, "echo") found
 		// strings.TrimPrefix(command, "echo") after
 		// after, found := strings.CutPrefix(command, "echo")
 		// if found {}
-		if command == "exit" {
+		if cmd == "exit" {
 			break
 		}
 
-		if after, found := strings.CutPrefix(command, "echo "); found {
-			fmt.Println(after)
+		//if after, found := strings.CutPrefix(command, "echo "); found {
+		//fmt.Println(after)
+		//continue
+		//}
+		//
+		if cmd == "echo" {
+			var cmdArgs = args[1:]
+			fmt.Println(strings.Join(cmdArgs, " "))
 			continue
 		}
 
 		// strings.hasPrefix(command, "type") - found
 		// strings.TrimPrefix(command, "type") - target
 
-		if target, found := strings.CutPrefix(command, "type "); found {
+		if cmd == "type" {
+			if len(args) < 2 {
+				continue
+			}
+			target := args[1]
 
 			if targets[target] {
 				fmt.Printf("%s is a shell builtin \n", target)
@@ -70,12 +91,9 @@ func main() {
 
 		}
 
-		parts := strings.Fields(command)
-
-		programFound := findExecutable(parts[0])
-
-		if programFound != "" {
-			executeProgram(parts[0], parts[1:])
+		foundPath := findExecutable(cmd)
+		if foundPath != "" {
+			executeProgram(cmd, args[1:])
 			continue
 		}
 
@@ -126,4 +144,30 @@ func executeProgram(command string, args []string) {
 		fmt.Printf("Err: %s \n Path: %s \n", err, command)
 	}
 
+}
+
+func parserQuoting(command string) []string {
+	var args []string
+	var buf strings.Builder
+	var inSingleQuotes = false
+
+	for _, c := range command {
+		if c == '\'' {
+			inSingleQuotes = !inSingleQuotes
+		} else if c == ' ' && !inSingleQuotes {
+			if buf.Len() > 0 {
+				args = append(args, buf.String())
+				buf.Reset()
+			}
+		} else {
+			buf.WriteRune(c)
+		}
+	}
+
+	if buf.Len() > 0 {
+		args = append(args, buf.String())
+	}
+
+	fmt.Println("ARGS:", args)
+	return args
 }
