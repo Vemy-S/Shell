@@ -16,6 +16,7 @@ var targets = map[string]bool{
 	"type": true,
 	"exit": true,
 	"echo": true,
+	"pwd":  true,
 }
 
 func main() {
@@ -58,6 +59,12 @@ func main() {
 		//}
 		//
 		if cmd == "echo" {
+			var cmdArgs = args[1:]
+			fmt.Println(strings.Join(cmdArgs, " "))
+			continue
+		}
+
+		if cmd == "pwd" {
 			var cmdArgs = args[1:]
 			fmt.Println(strings.Join(cmdArgs, " "))
 			continue
