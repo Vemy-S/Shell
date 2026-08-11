@@ -97,7 +97,7 @@ func main() {
 			continue
 		}
 
-		fmt.Printf("%s: command not found\n", command)
+		fmt.Printf("%s: command not found\n", cmd)
 	}
 }
 
