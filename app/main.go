@@ -168,6 +168,5 @@ func parserQuoting(command string) []string {
 		args = append(args, buf.String())
 	}
 
-	fmt.Println("ARGS:", args)
 	return args
 }
