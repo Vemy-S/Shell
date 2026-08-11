@@ -162,8 +162,10 @@ func parserQuoting(command string) []string {
 	for _, c := range command {
 		if c == '"' && !inSingleQuotes {
 			inDoubleQuotes = !inDoubleQuotes
+			continue
 		} else if c == '\'' {
 			inSingleQuotes = !inSingleQuotes
+			continue
 		} else if c == ' ' && !inSingleQuotes {
 			if buf.Len() > 0 {
 				args = append(args, buf.String())
